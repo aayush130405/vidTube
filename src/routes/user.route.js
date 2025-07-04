@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { registerUser, logoutUser, loginUser, refreshAccessToken } from "../controllers/user.controller.js";
+import { registerUser, logoutUser, loginUser, refreshAccessToken, changeCurrentPassword, getCurrentUser, getUserChannelProfile, updateAccountDetails, updateUserAvatar, updateUserCoverImage, getWatchHistory } from "../controllers/user.controller.js";
 
 import { verifyJWT } from "../middlewares/auth.middlewares.js";
 
