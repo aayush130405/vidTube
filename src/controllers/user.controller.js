@@ -122,7 +122,7 @@ const registerUser = asyncHandler( async (req,res) => {
 //logging in
 const loginUser = asyncHandler(async (req,res) => {
     const {email, password, username} = req.body
-    console.log(req.body)
+    // console.log(req.body)
 
     //validation
     if(!email || !password || !username){
@@ -201,6 +201,9 @@ const refreshAccessToken = asyncHandler( async (req,res) => {
         throw new apiError(401, "Refresh token is required")
     }
 
+    console.log("Incoming refresh token (before refreshing):", incomingRefreshToken);
+    // console.log("Secret exists:", !!process.env.REFRESH_TOKEN_SECRET);
+
     try {
         const decodedToken = jwt.verify(incomingRefreshToken, process.env.REFRESH_TOKEN_SECRET)
 
@@ -227,10 +230,11 @@ const refreshAccessToken = asyncHandler( async (req,res) => {
 
         return res
             .status(200)
-            .cookie("access token",accessToken,options)
-            .cookie("refresh token",newRefreshToken,options)
+            .cookie("accessToken",accessToken,options)
+            .cookie("refreshToken",newRefreshToken,options)
             .json(new apiResponse(200,{accessToken,refreshToken:newRefreshToken}),"Access token refreshed successfully")
     } catch (error) {
+        console.log(error);
         throw new apiError(500,"Something went wrong while refreshing token")
     }
 }) 
