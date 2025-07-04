@@ -31,7 +31,7 @@ const userSchema = new Schema(
             required: true,
             unique: true,
             lowercase: true,
-            trim:  true,
+            trim: true,
         },
         fullname: {
             type: String,
@@ -67,7 +67,7 @@ const userSchema = new Schema(
 userSchema.pre("save", async function (next){
     
     if(!this.isModified("password")) return next()        //if modified field is not password go to next middleware
-    this.password = bcrypt.hash(this.password, 10)  //encrypting password
+    this.password = await bcrypt.hash(this.password, 10)  //encrypting password
     next()      //go on to the next middle ware
 })
 
@@ -89,9 +89,9 @@ userSchema.methods.generateAccessToken = function () {
     );
 }
 
-userSchema.generateRefreshToken = async function () {
+userSchema.methods.generateRefreshToken = async function () {
     //long lived refresh token
-    jwt.sign({
+    return jwt.sign({
         _id: this._id,
     },
     process.env.REFRESH_TOKEN_SECRET,

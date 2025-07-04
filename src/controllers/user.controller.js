@@ -17,7 +17,7 @@ const generateAccessAndRefreshToken = async (userId) => {
         }
     
         const accessToken = user.generateAccessToken()
-        const refreshToken = user.generateRefreshToken()
+        const refreshToken = await user.generateRefreshToken()
     
         user.refreshToken = refreshToken            //passing the refresh token we generated to user schema's refresh token
         await user.save({validateBeforeSave: false})        //saving the change in the user schema (i.e. refreshToken change)
@@ -31,6 +31,7 @@ const generateAccessAndRefreshToken = async (userId) => {
 //registering user
 const registerUser = asyncHandler( async (req,res) => {
     const {fullname, email, username, password} = req.body      //DESTRUCTURING
+    // console.log(req.body)
 
     //validation
     if([fullname,username,email,password].some( (field) => field?.trim() === "" )){
@@ -121,6 +122,7 @@ const registerUser = asyncHandler( async (req,res) => {
 //logging in
 const loginUser = asyncHandler(async (req,res) => {
     const {email, password, username} = req.body
+    console.log(req.body)
 
     //validation
     if(!email || !password || !username){
@@ -193,7 +195,7 @@ const logoutUser = asyncHandler(async (req,res) => {
 //want to refresh access token
 const refreshAccessToken = asyncHandler( async (req,res) => {
 
-    const incomingRefreshToken = req.cookie || req.body.refreshToken
+    const incomingRefreshToken = req.body?.refreshToken || req.cookies?.refreshToken
 
     if (!incomingRefreshToken) {
         throw new apiError(401, "Refresh token is required")
@@ -212,13 +214,16 @@ const refreshAccessToken = asyncHandler( async (req,res) => {
             throw new apiError(401, "Invalid refresh token")
         }
 
+        const {accessToken, refreshToken: newRefreshToken} = await generateAccessAndRefreshToken(user._id)
+
+        user.refreshToken = newRefreshToken
+        await user.save({validateBeforeSave: false})
+
         //sending new token to user
         const options = {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production"
         }
-
-        const {accessToken, refreshToken: newRefreshToken} = await generateAccessAndRefreshToken(user._id)
 
         return res
             .status(200)
