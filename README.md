@@ -1,6 +1,6 @@
 # 📺 vidTube – Backend for a YouTube-Like Video Streaming Platform
 
-vidTube is a full-featured, backend-only clone of YouTube built using **Node.js**, **Express.js**, **MongoDB**, and **Cloudinary**. It delivers a scalable and modular RESTful API system that supports user management, video upload & streaming, likes/dislikes, comments, subscriptions, and playlists. Logging, file handling, and clean architecture practices are integrated throughout.
+**vidTube** is a full-featured, backend-only clone of YouTube built using **Node.js**, **Express.js**, **MongoDB**, and **Cloudinary**. It delivers a scalable and modular RESTful API system that supports user management, video upload & streaming, likes/dislikes, comments, subscriptions, and playlists. Logging, file handling, and clean architecture practices are integrated throughout.
 
 This project is designed with **clean code principles**, **scalable folder structure**, and **production-level middleware**, making it ideal for showcasing backend skills or serving as a foundation for a full-stack video platform.
 
@@ -67,6 +67,3 @@ This project demonstrates proficiency in:
 - App-level logs with Winston in `logs/app.log`
 
 ---
-
-## 🧾 Project Structure
-
