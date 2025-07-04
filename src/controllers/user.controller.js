@@ -234,7 +234,7 @@ const refreshAccessToken = asyncHandler( async (req,res) => {
             .cookie("refreshToken",newRefreshToken,options)
             .json(new apiResponse(200,{accessToken,refreshToken:newRefreshToken}),"Access token refreshed successfully")
     } catch (error) {
-        console.log(error);
+        // console.log(error);
         throw new apiError(500,"Something went wrong while refreshing token")
     }
 }) 
