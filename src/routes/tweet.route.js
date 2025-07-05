@@ -5,6 +5,7 @@ import { verifyJWT } from "../middlewares/auth.middlewares.js"
 const router = Router()
 
 router.route("/create").post(verifyJWT, createTweet)
+router.route("/get-tweets").get(verifyJWT, getUserTweets)
 
 export default router
 
