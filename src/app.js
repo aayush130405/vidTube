@@ -27,7 +27,7 @@ import { errorHandler } from './middlewares/error.middlewares.js'
 //routes
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/users",userRouter)
-
+app.use("/api/v1/tweets",tweetRouter)
 
 app.use(errorHandler)
 
