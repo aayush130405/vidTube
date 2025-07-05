@@ -23,6 +23,7 @@ app.use(cookieParser())     //middleware which makes cookies accessible for use
 import healthCheckRouter from "./routes/healthCheck.routes.js"
 import userRouter from "./routes/user.route.js"
 import { errorHandler } from './middlewares/error.middlewares.js'
+import tweetRouter from "./routes/tweet.route.js"
 
 //routes
 app.use("/api/v1/healthcheck", healthCheckRouter)
