@@ -35,6 +35,7 @@ const createTweet = asyncHandler(async (req, res) => {
 
 const getUserTweets = asyncHandler(async (req, res) => {
     //get user -> get tweets -> send the response to the client
+    
 })
 
 const updateTweet = asyncHandler(async (req, res) => {
