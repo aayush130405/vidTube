@@ -1,9 +1,10 @@
 import { Router } from "express"
-import { createTweeet, getUserTweets, updateTweet, deleteTweet } from "../controllers/tweet.controller.js"
+import { createTweet, getUserTweets, updateTweet, deleteTweet } from "../controllers/tweet.controller.js"
+import { verifyJWT } from "../middlewares/auth.middlewares.js"
 
 const router = Router()
 
-
+router.route("/create").post(verifyJWT, createTweet)
 
 export default router
 
