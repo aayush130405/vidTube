@@ -11,13 +11,30 @@ import { apiResponse } from "../utils/apiResponse.js"
     4. Delete a tweet
 */      
 
-const createTweeet = asyncHandler(async (req, res) => {
-    //get the tweet -> get the associated user -> create the tweet in db -> send the body response to db -> send the response to the client
+const createTweet = asyncHandler(async (req, res) => {
+    const {content} = req.body
+
+    if(!content) {
+        throw new apiError("Content is required", 400)
+    }
+    
+    // req.user is available from verifyJWT middleware
+    const tweet = await Tweet.create({
+        content,
+        owner: req.user._id
+    })
+    
+    if (!tweet) {
+        throw new apiError(500, "Something went wrong while creating the tweet")
+    }
+    
+    return res
+        .status(201)
+        .json(new apiResponse(201, tweet, "Tweet created successfully"))
 })
 
 const getUserTweets = asyncHandler(async (req, res) => {
     //get user -> get tweets -> send the response to the client
-
 })
 
 const updateTweet = asyncHandler(async (req, res) => {
@@ -28,4 +45,4 @@ const deleteTweet = asyncHandler(async (req, res) => {
     //get tweet -> delete tweet -> send the response to the client
 })
 
-export { createTweeet, getUserTweets, updateTweet, deleteTweet }
+export { createTweet, getUserTweets, updateTweet, deleteTweet }
