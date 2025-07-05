@@ -328,7 +328,7 @@ const updateUserCoverImage = asyncHandler(async (req,res) => {
         throw new apiError(500, "Failed to upload cover image")
     }
 
-    const user = User.findByIdAndUpdate(req.user?._id,
+    const user = await User.findByIdAndUpdate(req.user?._id,
         {
             $set: {
                 coverImage: coverImage.url
