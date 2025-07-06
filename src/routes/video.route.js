@@ -20,10 +20,20 @@ router.route("/upload").post(verifyJWT,
     ]),
     uploadVideo)
 
-router.route("/:videoId").get(verifyJWT, getVideoById)
-router.route("/:videoId").patch(verifyJWT, updateVideo)
-router.route("/:videoId").patch(verifyJWT, deleteVideo)
-router.route("/:videoId/toggle-publish-status").patch(verifyJWT, togglePublishStatus)
+router.route("/get-video-by-id/:videoId").get(verifyJWT, getVideoById)
+
+router.route("/update-video/:videoId").patch(verifyJWT,
+    upload.fields([
+        {
+            name: "thumbnail",
+            maxCount: 1
+        }
+    ]),
+    updateVideo)
+
+router.route("/delete-video/:videoId").patch(verifyJWT, deleteVideo)
+
+router.route("/toggle-publish-status/:videoId").patch(verifyJWT, togglePublishStatus)
 
 export default router
 
