@@ -34,7 +34,6 @@ const createTweet = asyncHandler(async (req, res) => {
 })
 
 const getUserTweets = asyncHandler(async (req, res) => {
-    //get user -> get tweets -> send the response to the client
     const user = await User.findById(req.user._id)
 
     if(!user) {
@@ -51,7 +50,39 @@ const getUserTweets = asyncHandler(async (req, res) => {
 })
 
 const updateTweet = asyncHandler(async (req, res) => {
-    //get tweet -> update tweet -> send the response to the client
+    const {tweetId} = req.params
+    const {content} = req.body
+
+    if(!tweetId) {
+        throw new apiError("Tweet ID is required", 400)
+    }
+
+    if(!content) {
+        throw new apiError("Content is required", 400)
+    }
+
+    const tweet = await Tweet.findById(tweetId)
+
+    if(!tweet) {
+        throw new apiError("Tweet not found", 404)
+    }
+
+    //check if the user owns the tweet
+    if(tweet.owner.toString() !== req.user._id.toString()) {
+        throw new apiError("You can only update your own tweets", 403)
+    }
+
+    const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $set: {
+            content: content
+        }
+    }, {new: true})
+
+    if(!updatedTweet) {
+        throw new apiError("Something went wrong while updating the tweet", 500)
+    }
+
+    return res.status(200).json(new apiResponse(200, updatedTweet, "Tweet updated successfully"))
 })
 
 const deleteTweet = asyncHandler(async (req, res) => {
