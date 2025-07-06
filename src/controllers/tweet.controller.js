@@ -74,7 +74,8 @@ const updateTweet = asyncHandler(async (req, res) => {
 
     const updatedTweet = await Tweet.findByIdAndUpdate(tweetId, {
         $set: {
-            content: content
+            content: content,
+            updatedAt: new Date()
         }
     }, {new: true})
 
