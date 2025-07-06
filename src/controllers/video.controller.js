@@ -66,7 +66,19 @@ const uploadVideo = asyncHandler(async (req, res) => {
 })
 
 const getAllVideos = asyncHandler(async (req, res) => {
+    //we will have the _id of user req.user through verifyJWT middleware, we need to get all videos that match the user id
+    const user = req.user?._id
+    if(!user) {
+        throw new apiError(401, "User not found")
+    }
 
+    const videos = await Video.find({owner: user}).select("-videoFile -thumbnail")
+
+    if(!videos) {
+        throw new apiError(404, "No videos found")
+    }
+
+    return res.status(200).json(new apiResponse(200, videos, "Videos fetched successfully"))
 })
 
 const getVideoById = asyncHandler(async (req, res) => {
