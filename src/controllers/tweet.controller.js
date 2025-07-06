@@ -86,8 +86,42 @@ const updateTweet = asyncHandler(async (req, res) => {
     return res.status(200).json(new apiResponse(200, updatedTweet, "Tweet updated successfully"))
 })
 
+//soft deleting a tweet : not deleting the tweet from the database, but setting the isDeleted flag to true, in order to keep the data in the database for future reference
 const deleteTweet = asyncHandler(async (req, res) => {
-    //get tweet -> delete tweet -> send the response to the client
+    const { tweetId } = req.params
+    const userId = req.user._id
+
+    if (!tweetId?.trim()) {
+        throw new apiError("Tweet ID is required", 400)
+    }
+
+    const tweet = await Tweet.findById(tweetId)
+
+    if (!tweet) {
+        throw new apiError("Tweet not found", 404)
+    }
+
+    // Check if the user owns the tweet
+    if (tweet.owner.toString() !== userId.toString()) {
+        throw new apiError("You can only delete your own tweets", 403)
+    }
+
+    // Soft Deleting
+    const deletedTweet = await Tweet.findByIdAndUpdate(tweetId, {
+        $set: {
+            isDeleted: true,
+            deletedAt: new Date(),
+            deletedBy: userId
+        }
+    }, { new: true })
+
+    if (!deletedTweet) {
+        throw new apiError("Something went wrong while deleting the tweet", 500)
+    }
+
+    return res.status(200).json(
+        new apiResponse(200, { deletedTweetId: tweetId }, "Tweet deleted successfully")
+    )
 })
 
 export { createTweet, getUserTweets, updateTweet, deleteTweet }
