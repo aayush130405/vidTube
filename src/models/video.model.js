@@ -48,6 +48,14 @@ const videoSchema =new Schema(
         owner: {
             type: Schema.Types.ObjectId,
             ref: "User"
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
+        deletedAt: {
+            type: Date,
+            default: null
         }
     }, {timestamps: true}
 )
