@@ -24,6 +24,14 @@ const commentSchema = new Schema(
         video: {
             type: Schema.Types.ObjectId,
             ref: "Video"
+        },
+        isDeleted: {
+            type: Boolean,
+            default: false
+        },
+        deletedAt: {
+            type: Date,
+            default: null
         }
     },{timestamps: true}
 )

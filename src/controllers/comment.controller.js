@@ -3,7 +3,6 @@ import { Comment } from "../models/comment.models.js"
 import { apiResponse } from "../utils/apiResponse.js"
 import { apiError } from "../utils/apiError.js"
 import { asyncHandler } from "../utils/asyncHandler.js"
-import mongoose from "mongoose"
 
 //methods
 const addComment = asyncHandler(async (req, res) => {
@@ -71,8 +70,26 @@ const updateComment = asyncHandler(async (req, res) => {
     return res.status(200).json(new apiResponse(200, updatedComment, "Comment updated successfully"))
 })
 
+//soft delete
 const deleteComment = asyncHandler(async (req, res) => {
+    const {commentId} = req.params
 
+    if(!commentId) {
+        throw new apiError(401, "Comment ID is required")
+    }
+
+    const deletedComment = await Comment.findByIdAndUpdate(commentId, {
+        $set: {
+            isDeleted: true,
+            deletedAt: new Date()
+        }
+    }, {new: true})
+
+    if(!deleteComment) {
+        throw new apiError(402, "Failed to delete comment")
+    }
+
+    return res.status(200).json(new apiResponse(200, deletedComment, "Comment deleted successfully"))
 })
 
 //exports
