@@ -34,7 +34,17 @@ const addComment = asyncHandler(async (req, res) => {
 })
 
 const getVideoComments = asyncHandler(async (req, res) => {
+    const {videoId} = req.params
+    if(!videoId) {
+        throw new apiError(400, "Video ID not found")
+    }
 
+    const comments = await Comment.find({video: videoId})
+    if(!comments) {
+        throw new apiError(402, "Failed to find comments")
+    }
+
+    return res.status(200).json(new apiResponse(200, comments, "Successfully grabbed comments"))
 })
 
 const updateComment = asyncHandler(async (req, res) => {
