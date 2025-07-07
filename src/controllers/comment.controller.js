@@ -48,7 +48,27 @@ const getVideoComments = asyncHandler(async (req, res) => {
 })
 
 const updateComment = asyncHandler(async (req, res) => {
+    
+    const {commentId} = req.params
 
+    if(!commentId) {
+        throw new apiError(401, "Comment ID can not be grabbed")
+    }
+
+    const {content} = req.body
+
+    const updatedComment = await Comment.findByIdAndUpdate(commentId,{
+        $set: {
+            content: content,
+            updatedAt: new Date()
+        }
+    },{new: true})
+
+    if(!updatedComment) {
+        throw new apiError(402, "Failed to update comment")
+    }
+    
+    return res.status(200).json(new apiResponse(200, updatedComment, "Comment updated successfully"))
 })
 
 const deleteComment = asyncHandler(async (req, res) => {
