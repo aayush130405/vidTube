@@ -27,6 +27,22 @@ const toggleVideoLike = asyncHandler( async (req,res) => {
 
 const toggleCommentLike = asyncHandler(async (req, res) => {
     //toggle like on comment
+    const {commentId} = req.params
+
+    if(!commentId) {
+        throw new apiError(401, "Comment ID is required")
+    }
+
+    const createdCommentLike = await Like.create({
+        comment: commentId,
+        likedby: req.user?._id
+    })
+
+    if(!createdCommentLike) {
+        throw new apiError(402, "Failed to like the comment")
+    }
+
+    return res.status(200).json(new apiResponse(200, createdCommentLike, "Comment liked successfully"))
 })
 
 const toggleTweetLike = asyncHandler(async (req,res) => {

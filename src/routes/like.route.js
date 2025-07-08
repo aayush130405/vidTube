@@ -8,5 +8,6 @@ const router = Router()
 
 //all the routes
 router.route("/like-video/:videoId").post(verifyJWT, toggleVideoLike)
+router.route("/like-comment/:commentId").post(verifyJWT, toggleCommentLike)
 
 export default router
