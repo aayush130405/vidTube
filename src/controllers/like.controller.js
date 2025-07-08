@@ -67,6 +67,19 @@ const toggleTweetLike = asyncHandler(async (req,res) => {
 
 const getVideoLikes = asyncHandler(async (req,res) => {
     //get all liked videos
+    const {videoId} = req.params
+
+    if(!videoId) {
+        throw new apiError(401, "Video ID is required")
+    }
+
+    const videoWithLikes = await Like.find({video: videoId})
+
+    if(!videoWithLikes) {
+        throw new apiError(404, "No videos found")
+    }
+
+    return res.status(200).json(new apiResponse(200, videoWithLikes, "Videos with likes found successfully"))
 })
 
 export { toggleVideoLike, toggleCommentLike, toggleTweetLike, getVideoLikes }
