@@ -12,6 +12,4 @@ router.route("/like-comment/:commentId").post(verifyJWT, toggleCommentLike)
 router.route("/like-tweet/:tweetId").post(verifyJWT, toggleTweetLike)
 router.route("/get-video-likes/:videoId").get(verifyJWT, getVideoLikes)
 
-
-
 export default router
