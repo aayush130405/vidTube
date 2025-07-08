@@ -26,11 +26,35 @@ const createPlaylist = asyncHandler(async (req,res) => {
 })
 
 const getUserPlaylists = asyncHandler(async (req,res) => {
+    const { userId } = req.params
 
+    if(!userId) {
+        throw new apiError(401, "User ID is required")
+    }
+
+    const userPlaylists = await Playlist.find({owner: userId})
+
+    if(!userPlaylists) {
+        throw new apiError(402, "Failed to create user playlists")
+    }
+
+    return res.status(200).json(new apiResponse(200, userPlaylists, "User playlists fetched successfully"))
 })
 
-const getVideoById = asyncHandler(async (req,res) => {
+const getPlaylistById = asyncHandler(async (req,res) => {
+    const { playlistId } = req.params
 
+    if(!playlistId) {
+        throw new apiError(401, "Playlist ID is required")
+    }
+
+    const playlist = await Playlist.findById(playlistId)
+
+    if(!playlist) {
+        throw new apiError(402, "Failed to grab playlists")
+    }
+
+    return res.status(200).json(new apiResponse(200, playlist, "Playlists grabbed successfully"))
 })
 
 const addVideoToPlaylist = asyncHandler(async (req,res) => {
@@ -49,4 +73,4 @@ const updatePlaylist = asyncHandler(async (req,res) => {
 
 })
 
-export { createPlaylist, getUserPlaylists, getVideoById, addVideoToPlaylist, removeVideoFromPlaylist, deletePlaylist, updatePlaylist }
+export { createPlaylist, getUserPlaylists, getPlaylistById, addVideoToPlaylist, removeVideoFromPlaylist, deletePlaylist, updatePlaylist }
