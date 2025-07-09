@@ -78,7 +78,23 @@ const addVideoToPlaylist = asyncHandler(async (req,res) => {
 })
 
 const removeVideoFromPlaylist = asyncHandler(async (req,res) => {
+    const {videoId, playlistId} = req.params
 
+    if([videoId, playlistId].some(field => field.trim() === "")) {
+        throw new apiError(401, "All fields are required")
+    }
+
+    const videoToRemoveFromPlaylist = await Playlist.findByIdAndUpdate(playlistId, {
+        $pull: {
+            videos: videoId
+        }
+    }, {new: true})
+
+    if(!videoToRemoveFromPlaylist) {
+        throw new apiError(402, "Failed to remove video from playlist")
+    }
+
+    return res.status(200).json(new apiResponse(200, videoToRemoveFromPlaylist, "Video removed from playlist"))
 })
 
 const deletePlaylist = asyncHandler(async (req,res) => {
