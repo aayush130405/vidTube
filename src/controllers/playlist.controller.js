@@ -97,8 +97,26 @@ const removeVideoFromPlaylist = asyncHandler(async (req,res) => {
     return res.status(200).json(new apiResponse(200, videoToRemoveFromPlaylist, "Video removed from playlist"))
 })
 
+//soft deleting playlist to have reference later
 const deletePlaylist = asyncHandler(async (req,res) => {
+    const {playlistId} = req.params
 
+    if(!playlistId) {
+        throw new apiError(401, "Playlist ID is required")
+    }
+
+    const deletePlaylist = await Playlist.findByIdAndUpdate(playlistId, {
+        $set: {
+            isDeleted: true,
+            deletedAt: new Date()
+        }
+    }, {new: true})
+
+    if(!deletePlaylist) {
+        throw new apiError(402, "Failed to delete playlist")
+    }
+
+    return res.status(200).json(new apiResponse(200, deletePlaylist, "Playlist deleted successfully"))
 })
 
 const updatePlaylist = asyncHandler(async (req,res) => {
