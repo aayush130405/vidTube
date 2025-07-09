@@ -2,3 +2,5 @@
 
 before deploying, all the controllers should have user auth check, as right now anyone can do anything, ex => go over to playlist.controller.js, there in 
 deletePlaylist method, any logged in user can delete anyone's playlist, HANDLE THAT when done with core ops.
+
+updatePlaylist is the only method with user auth check, that is commented out!!!!!! CHECK THAT FOR REFERENCE

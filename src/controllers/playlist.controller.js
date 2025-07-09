@@ -97,7 +97,6 @@ const removeVideoFromPlaylist = asyncHandler(async (req,res) => {
     return res.status(200).json(new apiResponse(200, videoToRemoveFromPlaylist, "Video removed from playlist"))
 })
 
-// =>>>> ONLY METHOD WITH USER CHECK <<<<<=
 //soft deleting playlist to have reference later
 const deletePlaylist = asyncHandler(async (req,res) => {
     const {playlistId} = req.params
@@ -120,6 +119,7 @@ const deletePlaylist = asyncHandler(async (req,res) => {
     return res.status(200).json(new apiResponse(200, deletePlaylist, "Playlist deleted successfully"))
 })
 
+// =>>>> ONLY METHOD WITH USER CHECK <<<<<=
 const updatePlaylist = asyncHandler(async (req,res) => {
     const {playlistId} = req.params
     const {name, description} = req.body
