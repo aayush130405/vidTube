@@ -97,6 +97,7 @@ const removeVideoFromPlaylist = asyncHandler(async (req,res) => {
     return res.status(200).json(new apiResponse(200, videoToRemoveFromPlaylist, "Video removed from playlist"))
 })
 
+// =>>>> ONLY METHOD WITH USER CHECK <<<<<=
 //soft deleting playlist to have reference later
 const deletePlaylist = asyncHandler(async (req,res) => {
     const {playlistId} = req.params
@@ -120,7 +121,38 @@ const deletePlaylist = asyncHandler(async (req,res) => {
 })
 
 const updatePlaylist = asyncHandler(async (req,res) => {
+    const {playlistId} = req.params
+    const {name, description} = req.body
 
+    if(!playlistId) {
+        throw new apiError(401, "Playlist ID is required")
+    }
+
+    if([name, description].some((field) => field.trim() === "")) {
+        throw new apiError(402, "All fields are required")
+    }
+
+    //USER CHECK PART
+    // const user = req.user?._id
+
+    // const playlist= await Playlist.findById(playlistId)
+    // if(playlist.owner.toString() !== user.toString()) {
+    //     throw new apiError(403, "UNAUTH USER")
+    // }
+
+    const playlistUpdate = await Playlist.findByIdAndUpdate(playlistId, {
+        $set: {
+            name: name,
+            description: description,
+            updatedAt: new Date()
+        }
+    }, {new: true})
+
+    if(!playlistUpdate) {
+        throw new apiError(405, "Failed to update playlist")
+    }
+
+    return res.status(200).json(new apiResponse(200, playlistUpdate, "Playlist updated successfully"))
 })
 
 export { createPlaylist, getUserPlaylists, getPlaylistById, addVideoToPlaylist, removeVideoFromPlaylist, deletePlaylist, updatePlaylist }
