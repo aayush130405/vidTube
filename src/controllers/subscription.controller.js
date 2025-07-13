@@ -47,6 +47,19 @@ const getUserChannelSubscribers = asyncHandler(async (req,res) => {
 })
 
 const getSubscribedChannels = asyncHandler(async (req,res) => {
+    const {subscriberId} = req.params
+
+    if(!subscriberId) {
+        throw new apiError(400, "Subscriber ID is required")
+    }
+
+    const userSubscribedChannels = await Subscription.find({subscriber: subscriberId}).select("channel")
+
+    if(!userSubscribedChannels) {
+        throw new apiError(401, "Could not get channels subscribed by users")
+    }
+
+    return res.status(200).json(new apiResponse(200, userSubscribedChannels, "Channel list fetched successfully"))
 
 })
 
