@@ -31,7 +31,19 @@ const toggleSubscription = asyncHandler(async (req,res) => {
 })
 
 const getUserChannelSubscribers = asyncHandler(async (req,res) => {
+    const {channelId} = req.params
 
+    if(!channelId) {
+        throw new apiError(400, "Channel ID is required")
+    }
+
+    const subList = await Subscription.find({channel: channelId}).select("subscriber")
+
+    if(!subList) {
+        throw new apiError(401, "Could not get the subscriber list")
+    }
+
+    return res.status(200).json(new apiResponse(200, subList, "Subscriber list fetched successfully"))
 })
 
 const getSubscribedChannels = asyncHandler(async (req,res) => {
