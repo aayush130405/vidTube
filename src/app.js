@@ -29,6 +29,7 @@ import commentRouter from "./routes/comment.route.js"
 import likeRouter from "./routes/like.route.js"
 import playlistRouter from "./routes/playlist.route.js"
 import subscriptionRouter from "./routes/subscription.route.js"
+import dashboardRouter from "./routes/dashboard.route.js"
 
 //routes
 app.use("/api/v1/healthcheck", healthCheckRouter)
@@ -39,6 +40,7 @@ app.use("/api/v1/comments",commentRouter)
 app.use("/api/v1/likes", likeRouter)
 app.use("/api/v1/playlists", playlistRouter)
 app.use("/api/v1/subscription", subscriptionRouter)
+app.use("/api/v1/dashboard", dashboardRouter)
 
 app.use(errorHandler)
 
